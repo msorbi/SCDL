@@ -597,36 +597,44 @@ def main():
         global_step, tr_loss, best_results = train(args, train_dataset, tokenizer, labels, pad_token_label_id)
         logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
 
-# def predict(args, tors, labels, pad_token_label_id, best_test):
-#     path = os.path.join(args.output_dir+tors, "checkpoint-best-2")
-#     tokenizer = RobertaTokenizer.from_pretrained(path, do_lower_case=args.do_lower_case)
-#     model = RobertaForTokenClassification_Modified.from_pretrained(path)
-#     model.to(args.device)
+        # Evaluation
+        if args.do_predict:
+            # results = (t1_best_dev, t1_best_test, t2_best_dev, t2_best_test)
+            tors, best = ("teacher2", best_results[2]) if best_results[0][-1] < best_results[2][-1] else ("teacher1", best_results[0]) # if t1_best_dev:F1 < t2_best_dev:F1
+            predict(args, tors, labels, pad_token_label_id, best, "dev")
+            predict(args, tors, labels, pad_token_label_id, best, "test")
 
-#     # if not best_test:
+def predict(args, tors, labels, pad_token_label_id, best, mode="test"):
+    path = os.path.join(args.output_dir+tors, "checkpoint-best-2")
+    tokenizer = RobertaTokenizer.from_pretrained(path, do_lower_case=args.do_lower_case)
+    model = RobertaForTokenClassification_Modified.from_pretrained(path)
+    model.to(args.device)
+
+    # if not best:
    
-#     # result, predictions, _, _ = evaluate(args, model, tokenizer, labels, pad_token_label_id, best=best_test, mode="test")
-#     result, _, best_test, _ = evaluate(args, model, tokenizer, labels, pad_token_label_id, best_test, mode="test", \
-#                                                         logger=logger, verbose=False)
-#     # Save results
-#     output_test_results_file = os.path.join(args.output_dir, "test_results.txt")
-#     with open(output_test_results_file, "w") as writer:
-#         for key in sorted(result.keys()):
-#             writer.write("{} = {}\n".format(key, str(result[key])))
+    # result, predictions, _, _ = evaluate(args, model, tokenizer, labels, pad_token_label_id, best=best, mode=mode)
+    result, predictions, best, _ = evaluate(args, model, tokenizer, labels, pad_token_label_id, best, mode=mode, \
+                                                        logger=logger, verbose=False)
+    # Save results
+    output_test_results_file = os.path.join(args.output_dir, f"{mode}_results.txt")
+    with open(output_test_results_file, "w") as writer:
+        for key in sorted(result.keys()):
+            writer.write("{} = {}\n".format(key, str(result[key])))
 
-#     return best_test
-#     # Save predictions
-#     # output_test_predictions_file = os.path.join(args.output_dir, "test_predictions.txt")
-#     # with open(output_test_predictions_file, "w") as writer:
-#     #     with open(os.path.join(args.data_dir, args.dataset+"_test.json"), "r") as f:
-#     #         example_id = 0
-#     #         data = json.load(f)
-#     #         for item in data: # original tag_ro_id must be {XXX:0, xxx:1, ...}
-#     #             tags = item["tags"]
-#     #             golden_labels = [labels[tag] for tag in tags]
-#     #             output_line = str(item["str_words"]) + "\n" + str(golden_labels)+"\n"+str(predictions[example_id]) + "\n"
-#     #             writer.write(output_line)
-#     #             example_id += 1
+    # Save predictions
+    output_test_predictions_file = os.path.join(args.output_dir, f"{mode}_predictions.txt")
+    with open(output_test_predictions_file, "w") as writer:
+        with open(os.path.join(args.data_dir, args.dataset+f"_{mode}.json"), "r") as f:
+            example_id = 0
+            data = json.load(f)
+            for item in data: # original tag_ro_id must be {XXX:0, xxx:1, ...}
+                tags = item["tags"]
+                golden_labels = [labels[tag] for tag in tags]
+                output_line = str(item["str_words"]) + "\n" + str(golden_labels)+"\n"+str(predictions[example_id]) + "\n"
+                writer.write(output_line)
+                example_id += 1
+
+    return best
 
 if __name__ == "__main__":
     main()

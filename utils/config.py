@@ -73,6 +73,7 @@ def config():
         "than this will be truncated, sequences shorter will be padded.",
     )
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
+    parser.add_argument("--do_predict", action="store_true", help="Whether to run prediction.")
     # # parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the dev set.")
     # parser.add_argument("--do_test", default="false", type=str, help="Whether to run predictions on the test set.")
     parser.add_argument(

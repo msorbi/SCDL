@@ -70,4 +70,5 @@ CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=$GPUID python3 -u run_script.p
   --do_train \
   --dataset $DATASET \
   --threshold $THRESHOLD \
+  --do_predict
 

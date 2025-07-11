@@ -1,0 +1,12 @@
+**/__pycache__/
+
+dataset/hdsner*
+dataset/*pt
+
+cached_models/*
+!cached_models/
+!cached_models/README.md
+
+ptms/*
+!ptms/
+!ptms/README.md

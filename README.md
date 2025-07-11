@@ -1,3 +1,13 @@
+# Conf-MPU for Historical NER
+
+Fork of [AIRobotZhang/SCDL](https://github.com/AIRobotZhang/SCDL) with added datasets. 
+
+## Historical NER Instructions
+
+Work in progress.
+
+# Forked Readme
+
 ## [Improving Distantly-Supervised Named Entity Recognition with Self-Collaborative Denoising Learning (EMNLP 2021)](https://aclanthology.org/2021.emnlp-main.839/)
 
 ## Framework

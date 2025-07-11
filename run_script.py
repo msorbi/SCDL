@@ -308,10 +308,10 @@ def train(args, train_dataset, tokenizer, labels, pad_token_label_id):
         epochs_trained, int(args.num_train_epochs), desc="Epoch", disable=args.local_rank not in [-1, 0]
     )
     set_seed(args)  # Added here for reproductibility
-    s1_best_dev, s1_best_test = [0, 0, 0], [0, 0, 0]
-    s2_best_dev, s2_best_test = [0, 0, 0], [0, 0, 0]
-    t1_best_dev, t1_best_test = [0, 0, 0], [0, 0, 0]
-    t2_best_dev, t2_best_test = [0, 0, 0], [0, 0, 0]
+    s1_best_dev, s1_best_test = [-1, -1, -1], [-1, -1, -1]
+    s2_best_dev, s2_best_test = [-1, -1, -1], [-1, -1, -1]
+    t1_best_dev, t1_best_test = [-1, -1, -1], [-1, -1, -1]
+    t2_best_dev, t2_best_test = [-1, -1, -1], [-1, -1, -1]
 
     self_learning_teacher_model1 = model_s1
     self_learning_teacher_model2 = model_s2
@@ -605,7 +605,7 @@ def main():
             predict(args, tors, labels, pad_token_label_id, best, "test")
 
 def predict(args, tors, labels, pad_token_label_id, best, mode="test"):
-    path = os.path.join(args.output_dir+tors, "checkpoint-best-2")
+    path = os.path.join(args.output_dir+tors, "checkpoint-best-1") # best dev checkpoint
     tokenizer = RobertaTokenizer.from_pretrained(path, do_lower_case=args.do_lower_case)
     model = RobertaForTokenClassification_Modified.from_pretrained(path)
     model.to(args.device)

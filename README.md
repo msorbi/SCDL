@@ -1,10 +1,31 @@
 # Conf-MPU for Historical NER
 
-Fork of [AIRobotZhang/SCDL](https://github.com/AIRobotZhang/SCDL) with added datasets. 
+Fork of [AIRobotZhang/SCDL](https://github.com/AIRobotZhang/SCDL) with added datasets. Work in progress.
 
 ## Historical NER Instructions
 
-Work in progress.
+### Datasets preparation
+- `source scripts/prepare_hdsner.sh`
+  - clones the datasets submodule
+  - creates the datasets conda environment
+  - downloads and pre-processes the datasets, with sequence length 64
+
+### Environment setup
+This is the setup of the model environment, which differs from the one in the submodule. \
+`conda env create -n SCDL -f environment.yml` \
+`conda activate SCDL`
+
+### Format data and run model
+`bash scripts/run_hdsner.sh supervised` # supervised setting \
+`bash scripts/run_hdsner.sh distant` # distantly-supervised setting \
+Results will be in `ptms/hdsner-DATASET-(supervised|distant)`. \
+**NOTE**: this will overwrite previous results of the same supervision method.
+
+### Evaluate results
+- `source scripts/eval_hdsner.sh`
+  - activates the datasets environment
+  - evaluates results, writing to `dataset/hdsner_report_(dev|test).json`
+    - it contains both supervised and distant results, if previously run, in the same file
 
 # Forked Readme
 

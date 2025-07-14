@@ -1,4 +1,4 @@
-# Conf-MPU for Historical NER
+# SCDL for Historical NER
 
 Fork of [AIRobotZhang/SCDL](https://github.com/AIRobotZhang/SCDL) with added datasets. Work in progress.
 
